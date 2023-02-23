@@ -160,5 +160,15 @@ class CompteServiceTest {
     assertThat(invalidMontantException.getMessage()).isEqualTo("Le montant doit être supérieur à 0");
   }
 
+  @Test
+  void consult_balance() {
+
+    Compte compte = Compte.builder()
+        .id("id").solde(500).transactions(new ArrayList<>())
+        .build();
+    when(persistancePort.findCompte()).thenReturn(compte);
+    assertThat(compteService.consultBalance()).isEqualTo(500);
+  }
+
 
 }

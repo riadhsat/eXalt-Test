@@ -9,4 +9,6 @@ public interface CompteServicePort {
 
   void withdrawalMoney(double amount) throws SoldeInsuffisantException, InvalidMontantException;
 
+  double consultBalance();
+
 }

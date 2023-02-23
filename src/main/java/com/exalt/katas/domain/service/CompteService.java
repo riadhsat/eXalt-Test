@@ -61,6 +61,11 @@ public class CompteService implements CompteServicePort {
     persistancePort.updateCompte(compte);
   }
 
+  @Override
+  public double consultBalance() {
+    return 0;
+  }
+
   private void checkValidMontant(double amount) throws InvalidMontantException {
     if(amount <= 0){
       throw new InvalidMontantException();
