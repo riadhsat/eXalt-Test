@@ -1,15 +1,13 @@
-/**
- * Copyright (c) ${YEAR} Carrefour, All rights reserved.
- * <p>
- * 9fbef606107a605d69c0edbcd8029e5d
- */
 package com.exalt.katas.domain.service;
 
 import com.exalt.katas.domain.api.CompteServicePort;
 import com.exalt.katas.domain.model.Compte;
+import com.exalt.katas.domain.model.Status;
+import com.exalt.katas.domain.model.Transaction;
+import com.exalt.katas.domain.model.TypeTransaction;
 import com.exalt.katas.domain.spi.PersistancePort;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +20,13 @@ public class CompteService implements CompteServicePort {
   public void depositMoney(double amount) {
     Compte compte = persistancePort.findCompte();
     compte.setSolde(compte.getSolde() + amount);
+    compte.getTransactions().add(Transaction.builder()
+        .typeTransaction(TypeTransaction.DEPOSIT)
+        .montant(120)
+        .status(Status.VALID)
+        .description("transaction validé")
+        .creationDate(LocalDateTime.now())
+        .build());
     persistancePort.updateCompte(compte);
   }
 }
