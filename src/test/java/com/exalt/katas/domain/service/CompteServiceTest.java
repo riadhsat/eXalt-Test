@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.exalt.katas.domain.exception.InvalidMontantException;
 import com.exalt.katas.domain.exception.SoldeInsuffisantException;
 import com.exalt.katas.domain.model.Compte;
 import com.exalt.katas.domain.model.Status;
@@ -140,4 +141,14 @@ class CompteServiceTest {
             .description("transaction invalide : solde insufisant")
             .build()));
   }
+
+  @Test
+  void withdrawalMoney_when_montant_invalid_then_throw_invalidMontantException()  {
+
+    InvalidMontantException invalidMontantException = assertThrows(InvalidMontantException.class, ()->  compteService.withdrawalMoney(-25));
+
+    assertThat(invalidMontantException.getMessage()).isEqualTo("Le montant doit d'etre supérieur à 0");
+  }
+
+
 }
