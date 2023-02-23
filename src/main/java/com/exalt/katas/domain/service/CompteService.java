@@ -20,9 +20,7 @@ public class CompteService implements CompteServicePort {
 
   @Override
   public void depositMoney(double amount) throws InvalidMontantException {
-    if(amount <= 0){
-      throw new InvalidMontantException();
-    }
+    checkValidMontant(amount);
     Compte compte = persistancePort.findCompte();
     compte.setSolde(compte.getSolde() + amount);
     compte.getTransactions().add(Transaction.builder()
@@ -35,18 +33,18 @@ public class CompteService implements CompteServicePort {
     persistancePort.updateCompte(compte);
   }
 
+
+
   @Override
   public void withdrawalMoney(double amount) throws SoldeInsuffisantException, InvalidMontantException {
-    if(amount <= 0){
-      throw new InvalidMontantException();
-    }
+    checkValidMontant(amount);
     Compte compte = persistancePort.findCompte();
     if(compte.getSolde() < amount){
       compte.getTransactions().add(Transaction.builder()
           .typeTransaction(TypeTransaction.WITHDRAWAL)
           .montant(amount)
           .status(Status.INVALID)
-          .description("transaction invalide : solde insufisant")
+          .description("transaction invalide : solde insuffisant")
           .creationDate(LocalDateTime.now())
           .build());
       persistancePort.updateCompte(compte);
@@ -61,5 +59,11 @@ public class CompteService implements CompteServicePort {
         .creationDate(LocalDateTime.now())
         .build());
     persistancePort.updateCompte(compte);
+  }
+
+  private void checkValidMontant(double amount) throws InvalidMontantException {
+    if(amount <= 0){
+      throw new InvalidMontantException();
+    }
   }
 }

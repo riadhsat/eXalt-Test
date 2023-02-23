@@ -140,7 +140,7 @@ class CompteServiceTest {
             .typeTransaction(TypeTransaction.WITHDRAWAL)
             .montant(500)
             .status(Status.INVALID)
-            .description("transaction invalide : solde insufisant")
+            .description("transaction invalide : solde insuffisant")
             .build()));
   }
 
@@ -157,7 +157,7 @@ class CompteServiceTest {
 
     InvalidMontantException invalidMontantException = assertThrows(InvalidMontantException.class, ()->  compteService.depositMoney(-25));
 
-    assertThat(invalidMontantException.getMessage()).isEqualTo("Le montant doit d'etre supérieur à 0");
+    assertThat(invalidMontantException.getMessage()).isEqualTo("Le montant doit être supérieur à 0");
   }
 
 
