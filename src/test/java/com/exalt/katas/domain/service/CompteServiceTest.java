@@ -173,6 +173,7 @@ class CompteServiceTest {
 
   @Test
   void consult_transaction() {
+    when(persistancePort.consultTransaction(0,10)).thenReturn(PageTransaction.builder().build());
     PageTransaction pageTransaction = compteService.consultTransaction(0, 10);
     assertThat(pageTransaction).isNotNull();
 

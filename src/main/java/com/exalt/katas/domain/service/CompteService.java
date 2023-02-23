@@ -69,7 +69,7 @@ public class CompteService implements CompteServicePort {
 
   @Override
   public PageTransaction consultTransaction(int page, int pageSize) {
-    return null;
+    return persistancePort.consultTransaction(page,pageSize);
   }
 
   private void checkValidMontant(double amount) throws InvalidMontantException {

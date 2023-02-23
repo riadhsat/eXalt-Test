@@ -1,7 +1,9 @@
 package com.exalt.katas.domain.model;
 
 import java.util.List;
+import lombok.Builder;
 
+@Builder
 public class PageTransaction {
 
   List<Transaction> transactions;
