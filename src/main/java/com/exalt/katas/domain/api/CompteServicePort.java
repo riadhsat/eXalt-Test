@@ -5,7 +5,7 @@ import com.exalt.katas.domain.exception.SoldeInsuffisantException;
 
 public interface CompteServicePort {
 
-  void depositMoney(double amount);
+  void depositMoney(double amount) throws InvalidMontantException;
 
   void withdrawalMoney(double amount) throws SoldeInsuffisantException, InvalidMontantException;
 

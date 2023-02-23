@@ -19,7 +19,10 @@ public class CompteService implements CompteServicePort {
   private final PersistancePort persistancePort;
 
   @Override
-  public void depositMoney(double amount) {
+  public void depositMoney(double amount) throws InvalidMontantException {
+    if(amount <= 0){
+      throw new InvalidMontantException();
+    }
     Compte compte = persistancePort.findCompte();
     compte.setSolde(compte.getSolde() + amount);
     compte.getTransactions().add(Transaction.builder()
