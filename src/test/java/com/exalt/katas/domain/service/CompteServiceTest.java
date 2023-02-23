@@ -173,9 +173,15 @@ class CompteServiceTest {
 
   @Test
   void consult_transaction() {
-    when(persistancePort.consultTransaction(0,10)).thenReturn(PageTransaction.builder().build());
-    PageTransaction pageTransaction = compteService.consultTransaction(0, 10);
-    assertThat(pageTransaction).isNotNull();
+    PageTransaction pageTransaction = PageTransaction.builder()
+        .page(0).pageSize(10).totalPage(1).totalTransactions(1)
+        .transactions(List.of(Transaction.builder().typeTransaction(TypeTransaction.DEPOSIT)
+            .build()))
+        .build();
+    when(persistancePort.consultTransaction(0,10)).thenReturn(pageTransaction);
+    PageTransaction pageTransactionActual = compteService.consultTransaction(0, 10);
+    assertThat(pageTransactionActual).isNotNull();
+    assertThat(pageTransactionActual).isEqualTo(pageTransaction);
 
   }
 
