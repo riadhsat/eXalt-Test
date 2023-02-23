@@ -63,7 +63,7 @@ public class CompteService implements CompteServicePort {
 
   @Override
   public double consultBalance() {
-    return 0;
+    return persistancePort.findCompte().getSolde();
   }
 
   private void checkValidMontant(double amount) throws InvalidMontantException {

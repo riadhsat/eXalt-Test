@@ -149,7 +149,7 @@ class CompteServiceTest {
 
     InvalidMontantException invalidMontantException = assertThrows(InvalidMontantException.class, ()->  compteService.withdrawalMoney(-25));
 
-    assertThat(invalidMontantException.getMessage()).isEqualTo("Le montant doit d'etre supérieur à 0");
+    assertThat(invalidMontantException.getMessage()).isEqualTo("Le montant doit être supérieur à 0");
   }
 
   @Test
