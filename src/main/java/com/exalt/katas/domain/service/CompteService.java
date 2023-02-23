@@ -22,7 +22,7 @@ public class CompteService implements CompteServicePort {
     compte.setSolde(compte.getSolde() + amount);
     compte.getTransactions().add(Transaction.builder()
         .typeTransaction(TypeTransaction.DEPOSIT)
-        .montant(120)
+        .montant(amount)
         .status(Status.VALID)
         .description("transaction validé")
         .creationDate(LocalDateTime.now())
@@ -34,6 +34,13 @@ public class CompteService implements CompteServicePort {
   public void withdrawalMoney(double amount) {
     Compte compte = persistancePort.findCompte();
     compte.setSolde(compte.getSolde() - amount);
+    compte.getTransactions().add(Transaction.builder()
+        .typeTransaction(TypeTransaction.WITHDRAWAL)
+        .montant(amount)
+        .status(Status.VALID)
+        .description("transaction validé")
+        .creationDate(LocalDateTime.now())
+        .build());
     persistancePort.updateCompte(compte);
   }
 }
