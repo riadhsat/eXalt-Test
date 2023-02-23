@@ -151,5 +151,13 @@ class CompteServiceTest {
     assertThat(invalidMontantException.getMessage()).isEqualTo("Le montant doit d'etre supérieur à 0");
   }
 
+  @Test
+  void depositMoney_when_montant_invalid_then_throw_invalidMontantException()  {
+
+    InvalidMontantException invalidMontantException = assertThrows(InvalidMontantException.class, ()->  compteService.depositMoney(-25));
+
+    assertThat(invalidMontantException.getMessage()).isEqualTo("Le montant doit d'etre supérieur à 0");
+  }
+
 
 }
