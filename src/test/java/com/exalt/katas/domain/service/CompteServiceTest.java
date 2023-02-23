@@ -116,4 +116,28 @@ class CompteServiceTest {
 
     assertThat(soldeInsuffisantException.getMessage()).isEqualTo("Votre solde est insuffisant");
   }
+
+  @Test
+  void withdrawalMoney_500_when_solde_is_400_then_throw_SoldeInsuffisantException_and_ADD_Transaction_with_status_invalid() {
+
+    Compte compte = Compte.builder()
+        .id("id").solde(400).transactions(new ArrayList<>())
+        .build();
+    when(persistancePort.findCompte()).thenReturn(compte);
+    when(persistancePort.updateCompte(compte)).thenReturn(compte);
+
+    SoldeInsuffisantException soldeInsuffisantException = assertThrows(SoldeInsuffisantException.class, ()->  compteService.withdrawalMoney(500));
+
+    assertThat(soldeInsuffisantException.getMessage()).isEqualTo("Votre solde est insuffisant");
+
+    assertThat(compte.getSolde()).isEqualTo(400);
+    assertThat(compte.getTransactions()).isNotEmpty();
+    assertThat(compte.getTransactions()).usingRecursiveComparison().ignoringFields("creationDate")
+        .isEqualTo(List.of(Transaction.builder()
+            .typeTransaction(TypeTransaction.WITHDRAWAL)
+            .montant(500)
+            .status(Status.INVALID)
+            .description("transaction invalide : solde insufisant")
+            .build()));
+  }
 }
