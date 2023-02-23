@@ -78,4 +78,26 @@ class CompteServiceTest {
 
     assertThat(compte.getSolde()).isEqualTo(300);
   }
+
+  @Test
+  void withdrawalMoney_500_when_solde_is_800_then_update_solde_to_300_and_ADD_Transaction_with_status_valid() {
+
+    Compte compte = Compte.builder()
+        .id("id").solde(800).transactions(new ArrayList<>())
+        .build();
+    when(persistancePort.findCompte()).thenReturn(compte);
+    when(persistancePort.updateCompte(compte)).thenReturn(compte);
+
+    compteService.withdrawalMoney(500);
+
+    assertThat(compte.getSolde()).isEqualTo(300);
+    assertThat(compte.getTransactions()).isNotEmpty();
+    assertThat(compte.getTransactions()).usingRecursiveComparison().ignoringFields("creationDate")
+        .isEqualTo(List.of(Transaction.builder()
+            .typeTransaction(TypeTransaction.WITHDRAWAL)
+            .montant(500)
+            .status(Status.VALID)
+            .description("transaction validé")
+            .build()));
+  }
 }
