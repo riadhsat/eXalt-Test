@@ -35,6 +35,14 @@ public class CompteService implements CompteServicePort {
   public void withdrawalMoney(double amount) throws SoldeInsuffisantException {
     Compte compte = persistancePort.findCompte();
     if(compte.getSolde() < amount){
+      compte.getTransactions().add(Transaction.builder()
+          .typeTransaction(TypeTransaction.WITHDRAWAL)
+          .montant(amount)
+          .status(Status.INVALID)
+          .description("transaction invalide : solde insufisant")
+          .creationDate(LocalDateTime.now())
+          .build());
+      persistancePort.updateCompte(compte);
       throw new SoldeInsuffisantException();
     }
     compte.setSolde(compte.getSolde() - amount);
