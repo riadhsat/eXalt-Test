@@ -3,7 +3,9 @@ package com.exalt.katas.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.exalt.katas.domain.exception.SoldeInsuffisantException;
 import com.exalt.katas.domain.model.Compte;
 import com.exalt.katas.domain.model.Status;
 import com.exalt.katas.domain.model.Transaction;
@@ -80,7 +82,8 @@ class CompteServiceTest {
   }
 
   @Test
-  void withdrawalMoney_500_when_solde_is_800_then_update_solde_to_300_and_ADD_Transaction_with_status_valid() {
+  void withdrawalMoney_500_when_solde_is_800_then_update_solde_to_300_and_ADD_Transaction_with_status_valid()
+      throws SoldeInsuffisantException {
 
     Compte compte = Compte.builder()
         .id("id").solde(800).transactions(new ArrayList<>())
@@ -99,5 +102,18 @@ class CompteServiceTest {
             .status(Status.VALID)
             .description("transaction validé")
             .build()));
+  }
+
+  @Test
+  void withdrawalMoney_500_when_solde_is_400_then_throw_SoldeInsuffisantException()  {
+
+    Compte compte = Compte.builder()
+        .id("id").solde(400).transactions(new ArrayList<>())
+        .build();
+    when(persistancePort.findCompte()).thenReturn(compte);
+
+    SoldeInsuffisantException soldeInsuffisantException = assertThrows(SoldeInsuffisantException.class, ()->  compteService.withdrawalMoney(500));
+
+    assertThat(soldeInsuffisantException.getMessage()).isEqualTo("Votre solde est insuffisant");
   }
 }
