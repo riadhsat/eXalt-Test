@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.exalt.katas.domain.exception.InvalidMontantException;
 import com.exalt.katas.domain.exception.SoldeInsuffisantException;
 import com.exalt.katas.domain.model.Compte;
+import com.exalt.katas.domain.model.PageTransaction;
 import com.exalt.katas.domain.model.Status;
 import com.exalt.katas.domain.model.Transaction;
 import com.exalt.katas.domain.model.TypeTransaction;
@@ -168,6 +169,13 @@ class CompteServiceTest {
         .build();
     when(persistancePort.findCompte()).thenReturn(compte);
     assertThat(compteService.consultBalance()).isEqualTo(500);
+  }
+
+  @Test
+  void consult_transaction() {
+    PageTransaction pageTransaction = compteService.consultTransaction(0, 10);
+    assertThat(pageTransaction).isNotNull();
+
   }
 
 

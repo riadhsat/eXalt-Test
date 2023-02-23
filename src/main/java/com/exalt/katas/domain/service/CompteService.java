@@ -4,6 +4,7 @@ import com.exalt.katas.domain.api.CompteServicePort;
 import com.exalt.katas.domain.exception.InvalidMontantException;
 import com.exalt.katas.domain.exception.SoldeInsuffisantException;
 import com.exalt.katas.domain.model.Compte;
+import com.exalt.katas.domain.model.PageTransaction;
 import com.exalt.katas.domain.model.Status;
 import com.exalt.katas.domain.model.Transaction;
 import com.exalt.katas.domain.model.TypeTransaction;
@@ -64,6 +65,11 @@ public class CompteService implements CompteServicePort {
   @Override
   public double consultBalance() {
     return persistancePort.findCompte().getSolde();
+  }
+
+  @Override
+  public PageTransaction consultTransaction(int page, int pageSize) {
+    return null;
   }
 
   private void checkValidMontant(double amount) throws InvalidMontantException {
