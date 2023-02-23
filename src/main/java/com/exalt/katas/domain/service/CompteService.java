@@ -1,6 +1,7 @@
 package com.exalt.katas.domain.service;
 
 import com.exalt.katas.domain.api.CompteServicePort;
+import com.exalt.katas.domain.exception.SoldeInsuffisantException;
 import com.exalt.katas.domain.model.Compte;
 import com.exalt.katas.domain.model.Status;
 import com.exalt.katas.domain.model.Transaction;
@@ -31,8 +32,11 @@ public class CompteService implements CompteServicePort {
   }
 
   @Override
-  public void withdrawalMoney(double amount) {
+  public void withdrawalMoney(double amount) throws SoldeInsuffisantException {
     Compte compte = persistancePort.findCompte();
+    if(compte.getSolde() < amount){
+      throw new SoldeInsuffisantException();
+    }
     compte.setSolde(compte.getSolde() - amount);
     compte.getTransactions().add(Transaction.builder()
         .typeTransaction(TypeTransaction.WITHDRAWAL)

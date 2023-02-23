@@ -68,7 +68,7 @@ class CompteServiceTest {
   }
 
   @Test
-  void withdrawalMoney_500_when_solde_is_800_then_update_solde_to_300() {
+  void withdrawalMoney_500_when_solde_is_800_then_update_solde_to_300() throws SoldeInsuffisantException {
 
     Compte compte = Compte.builder()
         .id("id").solde(800).transactions(new ArrayList<>())
