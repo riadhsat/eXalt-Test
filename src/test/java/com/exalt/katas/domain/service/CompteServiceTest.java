@@ -69,7 +69,8 @@ class CompteServiceTest {
   }
 
   @Test
-  void withdrawalMoney_500_when_solde_is_800_then_update_solde_to_300() throws SoldeInsuffisantException {
+  void withdrawalMoney_500_when_solde_is_800_then_update_solde_to_300()
+      throws SoldeInsuffisantException, InvalidMontantException {
 
     Compte compte = Compte.builder()
         .id("id").solde(800).transactions(new ArrayList<>())
@@ -84,7 +85,7 @@ class CompteServiceTest {
 
   @Test
   void withdrawalMoney_500_when_solde_is_800_then_update_solde_to_300_and_ADD_Transaction_with_status_valid()
-      throws SoldeInsuffisantException {
+      throws SoldeInsuffisantException, InvalidMontantException {
 
     Compte compte = Compte.builder()
         .id("id").solde(800).transactions(new ArrayList<>())
