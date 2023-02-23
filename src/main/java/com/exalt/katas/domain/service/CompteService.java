@@ -32,6 +32,8 @@ public class CompteService implements CompteServicePort {
 
   @Override
   public void withdrawalMoney(double amount) {
-
+    Compte compte = persistancePort.findCompte();
+    compte.setSolde(compte.getSolde() - amount);
+    persistancePort.updateCompte(compte);
   }
 }
