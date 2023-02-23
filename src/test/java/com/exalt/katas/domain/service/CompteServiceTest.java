@@ -44,7 +44,7 @@ class CompteServiceTest {
   }
 
   @Test
-  void depositMoney_with_120_solde_is_0_update_solde_to_120_and_ADD_Transaction_with_status_valid() {
+  void depositMoney_120_when_solde_is_0_then_update_solde_to_120_and_ADD_Transaction_with_status_valid() {
 
     Compte compte = Compte.builder()
         .id("id").solde(0).transactions(new ArrayList<>())
@@ -63,5 +63,19 @@ class CompteServiceTest {
             .status(Status.VALID)
             .description("transaction validé")
             .build()));
+  }
+
+  @Test
+  void withdrawalMoney_500_when_solde_is_800_then_update_solde_to_300() {
+
+    Compte compte = Compte.builder()
+        .id("id").solde(800).transactions(new ArrayList<>())
+        .build();
+    when(persistancePort.findCompte()).thenReturn(compte);
+    when(persistancePort.updateCompte(compte)).thenReturn(compte);
+
+    compteService.withdrawalMoney(500);
+
+    assertThat(compte.getSolde()).isEqualTo(300);
   }
 }

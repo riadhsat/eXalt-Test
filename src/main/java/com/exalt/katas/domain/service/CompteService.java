@@ -29,4 +29,9 @@ public class CompteService implements CompteServicePort {
         .build());
     persistancePort.updateCompte(compte);
   }
+
+  @Override
+  public void withdrawalMoney(double amount) {
+
+  }
 }

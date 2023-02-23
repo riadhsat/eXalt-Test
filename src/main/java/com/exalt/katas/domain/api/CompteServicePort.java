@@ -4,4 +4,6 @@ public interface CompteServicePort {
 
   void depositMoney(double amount);
 
+  void withdrawalMoney(double amount);
+
 }
