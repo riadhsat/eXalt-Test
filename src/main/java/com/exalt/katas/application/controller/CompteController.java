@@ -1,5 +1,6 @@
 package com.exalt.katas.application.controller;
 
+import com.exalt.katas.application.api.CompteApi;
 import com.exalt.katas.application.mapper.ServiceToRestMapper;
 import com.exalt.katas.application.response.RestPageTransaction;
 import com.exalt.katas.application.response.ResultResponse;
@@ -19,19 +20,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/compte", produces = {MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"})
 @RequiredArgsConstructor
-public class CompteController {
+public class CompteController implements CompteApi {
 
   private final CompteServicePort compteServicePort;
 
   private final ServiceToRestMapper serviceToRestMapper;
 
 
+  @Override
   @GetMapping
   public ResponseEntity<ResultResponse> consultSolde() {
     double solde = compteServicePort.consultBalance();
     return ResponseEntity.ok(ResultResponse.builder().message("Votre solde est :" + solde).build());
   }
 
+  @Override
   @PostMapping("/withdrawal")
   public ResponseEntity<ResultResponse> withdrawalMoney(@RequestParam int amount)
       throws SoldeInsuffisantException, InvalidMontantException {
@@ -41,6 +44,7 @@ public class CompteController {
             .build());
   }
 
+  @Override
   @PostMapping("/deposit")
   public ResponseEntity<ResultResponse> depositMoney(@RequestParam int amount)
       throws InvalidMontantException {
@@ -51,6 +55,7 @@ public class CompteController {
   }
 
 
+  @Override
   @GetMapping("/transactions")
   public ResponseEntity<RestPageTransaction> getTransactions(
       @RequestParam(value = "page", required = false, defaultValue = "0") int page,
