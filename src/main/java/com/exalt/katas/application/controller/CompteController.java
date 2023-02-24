@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,11 @@ public class CompteController {
   public ResponseEntity<ResultResponse> consultSolde(){
     double solde = compteServicePort.consultBalance();
     return ResponseEntity.ok(ResultResponse.builder().message("Votre solde est :"+solde).build());
+  }
+
+  @PostMapping("/withdrawal")
+  public ResponseEntity<ResultResponse> withdrawalMoney(){
+    return null;
   }
 
 }
