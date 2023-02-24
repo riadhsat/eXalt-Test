@@ -45,4 +45,20 @@ class PersistanceAdapterTest {
     assertThat(actual.getSolde()).isEqualTo(120);
 
   }
+
+  @Test
+  void testUpdateCompte() {
+    CompteDto compteDto = CompteDto.builder()
+        .id(14).solde(120).transactions(new ArrayList<>())
+        .build();
+    Compte compte = Compte.builder()
+        .id("14").solde(120).transactions(new ArrayList<>())
+        .build();
+    when(compteRepository.save(compteDto)).thenReturn(compteDto);
+
+    Compte actual = persistanceAdapter.updateCompte(compte);
+
+    assertThat(actual).isEqualTo(compte);
+
+  }
 }
