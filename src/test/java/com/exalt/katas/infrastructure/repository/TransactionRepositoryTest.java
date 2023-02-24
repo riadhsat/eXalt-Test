@@ -1,6 +1,7 @@
 package com.exalt.katas.infrastructure.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.exalt.katas.infrastructure.model.CompteDto;
 import com.exalt.katas.infrastructure.model.TransactionDto;
@@ -44,7 +45,7 @@ class TransactionRepositoryTest {
     entityManager.persist(compte);
     entityManager.flush();
 
-    Page<TransactionDto> transactions = transactionRepository.findAll(PageRequest.of(0, 1));
+    Page<TransactionDto> transactions = transactionRepository.findAll(PageRequest.of(0, 1, DESC, "creationDate"));
 
     assertThat(transactions.getContent()).hasSize(1);
     assertThat(transactions.getContent().get(0)).isEqualTo(compte.getTransactions().get(0));
