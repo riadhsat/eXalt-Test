@@ -4,14 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.exalt.katas.domain.model.Compte;
+import com.exalt.katas.infrastructure.mapper.CompteDtoToCompteMapper;
 import com.exalt.katas.infrastructure.model.CompteDto;
 import com.exalt.katas.infrastructure.repository.CompteRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 
 class PersistanceAdapterTest {
@@ -19,12 +22,15 @@ class PersistanceAdapterTest {
   @Mock
   private CompteRepository compteRepository;
 
+  @Spy
+  private final CompteDtoToCompteMapper compteDtoToCompteMapper = Mappers.getMapper(CompteDtoToCompteMapper.class);
+
   private PersistanceAdapter persistanceAdapter;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    persistanceAdapter = new PersistanceAdapter(compteRepository);
+    persistanceAdapter = new PersistanceAdapter(compteRepository, compteDtoToCompteMapper);
   }
 
   @Test
