@@ -1,5 +1,7 @@
 package com.exalt.katas.application.controller;
 
+import static com.exalt.katas.domain.model.Status.VALID;
+import static com.exalt.katas.domain.model.TypeTransaction.WITHDRAWAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -17,6 +19,11 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 import com.exalt.katas.domain.api.CompteServicePort;
 import com.exalt.katas.domain.exception.InvalidMontantException;
 import com.exalt.katas.domain.exception.SoldeInsuffisantException;
+import com.exalt.katas.domain.model.PageTransaction;
+import com.exalt.katas.domain.model.Status;
+import com.exalt.katas.domain.model.Transaction;
+import com.exalt.katas.domain.model.TypeTransaction;
+import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -117,12 +124,31 @@ class CompteControllerTest {
 
   private static Stream<Arguments> useCases() {
     return Stream.of(
-        Arguments.of("/compte/deposit","0"),
-        Arguments.of("/compte/deposit","-1"),
-        Arguments.of("/compte/deposit","-10"),
-        Arguments.of("/compte/withdrawal","0"),
-        Arguments.of("/compte/withdrawal","-1"),
-        Arguments.of("/compte/withdrawal","-10")
+        Arguments.of("/compte/deposit", "0"),
+        Arguments.of("/compte/deposit", "-1"),
+        Arguments.of("/compte/deposit", "-10"),
+        Arguments.of("/compte/withdrawal", "0"),
+        Arguments.of("/compte/withdrawal", "-1"),
+        Arguments.of("/compte/withdrawal", "-10")
     );
+  }
+
+  @Test
+  void testTransactions() throws Exception {
+
+    when(compteServicePort.consultTransaction(0,10))
+        .thenReturn(PageTransaction.builder()
+            .pageSize(10).page(0).totalPage(1).totalTransactions(1)
+            .transactions(List.of(Transaction.builder().typeTransaction(WITHDRAWAL)
+                .montant(1500).description("succes").status(VALID).build()))
+        .build());
+
+    MvcResult result = mockMvc.perform(get("/compte/transactions")
+        .param("page", "0")
+        .param("page_size", "10"))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    assertNotNull(result.getResponse().getContentAsString());
   }
 }
