@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 import com.exalt.katas.domain.api.CompteServicePort;
 import com.exalt.katas.domain.exception.InvalidMontantException;
+import com.exalt.katas.domain.exception.SoldeInsuffisantException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -82,5 +83,16 @@ class CompteControllerTest {
             .param("amount", amount))
             .andReturn());
     assertEquals("Le montant doit être supérieur à 0", invalidMontantException.getCause().getMessage());
+  }
+
+  @Test
+  void testWithdrawalMoney_when_solde_inssufisant_then_throw_SoldeInsuffisantException() throws Exception {
+
+    doThrow(new SoldeInsuffisantException()).when(compteServicePort).withdrawalMoney(anyDouble());
+    Exception soldeInsuffisantException = assertThrows(Exception.class,
+        () -> mockMvc.perform(post("/compte/withdrawal")
+            .param("amount", "1500"))
+            .andReturn());
+    assertEquals("Votre solde est insuffisant", soldeInsuffisantException.getCause().getMessage());
   }
 }
