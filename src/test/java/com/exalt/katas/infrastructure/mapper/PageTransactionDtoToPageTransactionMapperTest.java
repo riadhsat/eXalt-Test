@@ -21,12 +21,14 @@ class PageTransactionDtoToPageTransactionMapperTest {
     List<TransactionDto> transactions = List.of(TransactionDto.builder()
             .description("test")
             .montant(500)
-            .status("valid")
+            .typeTransaction("WITHDRAWAL")
+            .status("VALID")
             .creationDate(LocalDateTime.now()).build(),
         TransactionDto.builder()
             .description("test")
             .montant(200)
-            .status("valid")
+            .typeTransaction("DEPOSIT")
+            .status("VALID")
             .creationDate(LocalDateTime.now()).build());
 
     PageTransaction pageTransaction = mapper.toPageTransaction(new PageImpl<>(transactions));

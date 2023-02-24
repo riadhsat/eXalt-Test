@@ -8,10 +8,10 @@ import lombok.Getter;
 @Getter
 public class PageTransaction {
 
-  List<Transaction> transactions;
-  int page;
-  int pageSize;
-  int totalPage;
-  int totalTransactions;
+  private List<Transaction> transactions;
+  private int page;
+  private int pageSize;
+  private int totalPage;
+  private int totalTransactions;
 
 }
