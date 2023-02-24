@@ -19,6 +19,8 @@ import com.exalt.katas.domain.api.CompteServicePort;
 import com.exalt.katas.domain.exception.InvalidMontantException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -70,13 +72,14 @@ class CompteControllerTest {
         .isEqualTo("{\"message\":\"Votre retrait de montant 1500 a ete effectué avec succès\"}");
   }
 
-  @Test
-  void testWithdrawalMoney_when_amount_is_0() throws Exception {
+  @ParameterizedTest
+  @ValueSource(strings = {"0", "-1", "-10"})
+  void testWithdrawalMoney_when_amount_invalid_then_throw_invalidMontantException(String amount) throws Exception {
 
     doThrow(new InvalidMontantException()).when(compteServicePort).withdrawalMoney(anyDouble());
     Exception invalidMontantException = assertThrows(Exception.class,
         () -> mockMvc.perform(post("/compte/withdrawal")
-            .param("amount", "0"))
+            .param("amount", amount))
             .andReturn());
     assertEquals("Le montant doit être supérieur à 0", invalidMontantException.getCause().getMessage());
   }
