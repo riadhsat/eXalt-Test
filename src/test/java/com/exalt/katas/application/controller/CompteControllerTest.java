@@ -109,4 +109,16 @@ class CompteControllerTest {
     assertThat(result.getResponse().getContentAsString())
         .isEqualTo("{\"message\":\"Votre depot de montant 1500 a ete effectué avec succès\"}");
   }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"0", "-1", "-10"})
+  void testDepositMoney_when_amount_invalid_then_throw_invalidMontantException(String amount) throws Exception {
+
+    doThrow(new InvalidMontantException()).when(compteServicePort).depositMoney(anyDouble());
+    Exception invalidMontantException = assertThrows(Exception.class,
+        () -> mockMvc.perform(post("/compte/deposit")
+            .param("amount", amount))
+            .andReturn());
+    assertEquals("Le montant doit être supérieur à 0", invalidMontantException.getCause().getMessage());
+  }
 }
