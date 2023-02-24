@@ -95,4 +95,18 @@ class CompteControllerTest {
             .andReturn());
     assertEquals("Votre solde est insuffisant", soldeInsuffisantException.getCause().getMessage());
   }
+
+  @Test
+  void testDepositMoney() throws Exception {
+
+    MvcResult result = mockMvc.perform(post("/compte/deposit")
+        .param("amount", "1500"))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    assertNotNull(result.getResponse().getContentAsString());
+    verify(compteServicePort, only()).depositMoney(1500);
+    assertThat(result.getResponse().getContentAsString())
+        .isEqualTo("{\"message\":\"Votre depot de montant 1500 a ete effectué avec succès\"}");
+  }
 }
