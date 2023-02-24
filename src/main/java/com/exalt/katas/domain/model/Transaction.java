@@ -2,9 +2,11 @@ package com.exalt.katas.domain.model;
 
 import java.time.LocalDateTime;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Builder
+@EqualsAndHashCode
 @Getter
 public class Transaction {
 
