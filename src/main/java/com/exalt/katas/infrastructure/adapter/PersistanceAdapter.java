@@ -7,6 +7,7 @@ import com.exalt.katas.infrastructure.mapper.CompteDtoToCompteMapper;
 import com.exalt.katas.infrastructure.mapper.CompteToCompteDtoMapper;
 import com.exalt.katas.infrastructure.model.CompteDto;
 import com.exalt.katas.infrastructure.repository.CompteRepository;
+import com.exalt.katas.infrastructure.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 public class PersistanceAdapter implements PersistancePort {
 
   private final CompteRepository compteRepository;
+
+  private final TransactionRepository transactionRepository;
 
   private final CompteDtoToCompteMapper compteDtoToCompteMapper;
 
