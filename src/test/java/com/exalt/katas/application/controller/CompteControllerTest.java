@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -25,6 +26,7 @@ import com.exalt.katas.domain.model.Transaction;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -148,12 +150,11 @@ class CompteControllerTest {
                 .montant(1500).description("succes").status(VALID).creationDate(LocalDateTime.now()).build()))
         .build());
 
-    MvcResult result = mockMvc.perform(get("/compte/transactions")
+    mockMvc.perform(get("/compte/transactions")
         .param("page", "0")
         .param("page_size", "10"))
         .andExpect(status().isOk())
-        .andReturn();
-
-    assertNotNull(result.getResponse().getContentAsString());
+        .andExpect(jsonPath("$.page", Matchers.is(0)))
+        .andExpect(jsonPath("$.pageSize", Matchers.is(10)));
   }
 }
