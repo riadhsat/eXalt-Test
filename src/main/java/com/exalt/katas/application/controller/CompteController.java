@@ -36,4 +36,13 @@ public class CompteController {
             .build());
   }
 
+  @PostMapping("/deposit")
+  public ResponseEntity<ResultResponse> depositMoney(@RequestParam int amount)
+      throws  InvalidMontantException {
+    compteServicePort.depositMoney(amount);
+    return ResponseEntity
+        .ok(ResultResponse.builder().message("Votre depot de montant " + amount + " a ete effectué avec succès")
+            .build());
+  }
+
 }
