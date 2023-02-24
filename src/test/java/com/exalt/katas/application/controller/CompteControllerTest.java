@@ -59,11 +59,8 @@ class CompteControllerTest {
         .andReturn();
 
     assertNotNull(result.getResponse().getContentAsString());
+    verify(compteServicePort, only()).withdrawalMoney(1500);
     assertThat(result.getResponse().getContentAsString())
         .isEqualTo("{\"message\":\"Votre retrait de montant 1500 a ete effectué avec succès\"}");
-    verify(compteServicePort, only()).withdrawalMoney(1500);
-
   }
-
-
 }
