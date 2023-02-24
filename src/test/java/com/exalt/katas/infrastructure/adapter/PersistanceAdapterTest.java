@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import com.exalt.katas.domain.model.Compte;
 import com.exalt.katas.infrastructure.mapper.CompteDtoToCompteMapper;
+import com.exalt.katas.infrastructure.mapper.CompteToCompteDtoMapper;
 import com.exalt.katas.infrastructure.model.CompteDto;
 import com.exalt.katas.infrastructure.repository.CompteRepository;
 import java.util.ArrayList;
@@ -25,12 +26,15 @@ class PersistanceAdapterTest {
   @Spy
   private final CompteDtoToCompteMapper compteDtoToCompteMapper = Mappers.getMapper(CompteDtoToCompteMapper.class);
 
+  @Spy
+  private final CompteToCompteDtoMapper compteToCompteDtoMapper = Mappers.getMapper(CompteToCompteDtoMapper.class);
+
   private PersistanceAdapter persistanceAdapter;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    persistanceAdapter = new PersistanceAdapter(compteRepository, compteDtoToCompteMapper);
+    persistanceAdapter = new PersistanceAdapter(compteRepository, compteDtoToCompteMapper, compteToCompteDtoMapper);
   }
 
   @Test
