@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.only;
@@ -18,10 +17,12 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 import com.exalt.katas.domain.api.CompteServicePort;
 import com.exalt.katas.domain.exception.InvalidMontantException;
 import com.exalt.katas.domain.exception.SoldeInsuffisantException;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -73,17 +74,7 @@ class CompteControllerTest {
         .isEqualTo("{\"message\":\"Votre retrait de montant 1500 a ete effectué avec succès\"}");
   }
 
-  @ParameterizedTest
-  @ValueSource(strings = {"0", "-1", "-10"})
-  void testWithdrawalMoney_when_amount_invalid_then_throw_invalidMontantException(String amount) throws Exception {
 
-    doThrow(new InvalidMontantException()).when(compteServicePort).withdrawalMoney(anyDouble());
-    Exception invalidMontantException = assertThrows(Exception.class,
-        () -> mockMvc.perform(post("/compte/withdrawal")
-            .param("amount", amount))
-            .andReturn());
-    assertEquals("Le montant doit être supérieur à 0", invalidMontantException.getCause().getMessage());
-  }
 
   @Test
   void testWithdrawalMoney_when_solde_inssufisant_then_throw_SoldeInsuffisantException() throws Exception {
@@ -111,14 +102,27 @@ class CompteControllerTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {"0", "-1", "-10"})
-  void testDepositMoney_when_amount_invalid_then_throw_invalidMontantException(String amount) throws Exception {
+  @MethodSource("useCases")
+  void testWithdrawalOrDepositMoney_when_amount_invalid_then_throw_Exception(String url,String amount) throws Exception {
 
+    doThrow(new InvalidMontantException()).when(compteServicePort).withdrawalMoney(anyDouble());
     doThrow(new InvalidMontantException()).when(compteServicePort).depositMoney(anyDouble());
-    Exception invalidMontantException = assertThrows(Exception.class,
-        () -> mockMvc.perform(post("/compte/deposit")
+    Exception exception = assertThrows(Exception.class,
+        () -> mockMvc.perform(post(url)
             .param("amount", amount))
             .andReturn());
-    assertEquals("Le montant doit être supérieur à 0", invalidMontantException.getCause().getMessage());
+    assertEquals("Le montant doit être supérieur à 0", exception.getCause().getMessage());
+
+  }
+
+  private static Stream<Arguments> useCases() {
+    return Stream.of(
+        Arguments.of("/compte/deposit","0"),
+        Arguments.of("/compte/deposit","-1"),
+        Arguments.of("/compte/deposit","-10"),
+        Arguments.of("/compte/withdrawal","0"),
+        Arguments.of("/compte/withdrawal","-1"),
+        Arguments.of("/compte/withdrawal","-10")
+    );
   }
 }
