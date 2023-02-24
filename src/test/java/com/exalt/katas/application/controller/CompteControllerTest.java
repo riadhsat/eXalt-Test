@@ -16,13 +16,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+import com.exalt.katas.application.mapper.ServiceToRestMapper;
 import com.exalt.katas.domain.api.CompteServicePort;
 import com.exalt.katas.domain.exception.InvalidMontantException;
 import com.exalt.katas.domain.exception.SoldeInsuffisantException;
 import com.exalt.katas.domain.model.PageTransaction;
-import com.exalt.katas.domain.model.Status;
 import com.exalt.katas.domain.model.Transaction;
-import com.exalt.katas.domain.model.TypeTransaction;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,9 +30,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -43,13 +45,16 @@ class CompteControllerTest {
   @Mock
   private CompteServicePort compteServicePort;
 
+  @Spy
+  private ServiceToRestMapper serviceToRestMapper = Mappers.getMapper(ServiceToRestMapper.class);
+
   @InjectMocks
   private CompteController compteController;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    compteController = new CompteController(compteServicePort);
+    compteController = new CompteController(compteServicePort, serviceToRestMapper);
     this.mockMvc = standaloneSetup(compteController).build();
   }
 
@@ -140,7 +145,7 @@ class CompteControllerTest {
         .thenReturn(PageTransaction.builder()
             .pageSize(10).page(0).totalPage(1).totalTransactions(1)
             .transactions(List.of(Transaction.builder().typeTransaction(WITHDRAWAL)
-                .montant(1500).description("succes").status(VALID).build()))
+                .montant(1500).description("succes").status(VALID).creationDate(LocalDateTime.now()).build()))
         .build());
 
     MvcResult result = mockMvc.perform(get("/compte/transactions")
