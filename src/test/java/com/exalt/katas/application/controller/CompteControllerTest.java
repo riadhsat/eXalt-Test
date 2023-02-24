@@ -34,7 +34,9 @@ class CompteControllerTest {
   @Test
   void testConsultSolde() throws Exception {
 
-    MvcResult result =mockMvc.perform(get("/compte")).andExpect(status().isOk()).andReturn();
+    MvcResult result =mockMvc.perform(get("/compte"))
+        .andExpect(status().isOk())
+        .andReturn();
 
     assertNotNull(result.getResponse().getContentAsString());
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "Compte", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "/compte", produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class CompteController {
 
@@ -19,7 +19,8 @@ public class CompteController {
 
   @GetMapping
   public ResponseEntity<ResultResponse> consultSolde(){
-    return null;
+    double solde = compteServicePort.consultBalance();
+    return ResponseEntity.ok(ResultResponse.builder().message("Votre solde est :"+solde).build());
   }
 
 }
