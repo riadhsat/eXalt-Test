@@ -9,14 +9,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Entity
 @Data
-@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "Transaction")
 public class TransactionDto {
 
