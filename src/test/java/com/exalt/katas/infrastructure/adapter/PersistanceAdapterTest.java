@@ -8,6 +8,7 @@ import com.exalt.katas.domain.model.Compte;
 import com.exalt.katas.domain.model.PageTransaction;
 import com.exalt.katas.infrastructure.mapper.CompteDtoToCompteMapper;
 import com.exalt.katas.infrastructure.mapper.CompteToCompteDtoMapper;
+import com.exalt.katas.infrastructure.mapper.PageTransactionDtoToPageTransactionMapper;
 import com.exalt.katas.infrastructure.model.CompteDto;
 import com.exalt.katas.infrastructure.model.TransactionDto;
 import com.exalt.katas.infrastructure.repository.CompteRepository;
@@ -39,13 +40,17 @@ class PersistanceAdapterTest {
   @Spy
   private final CompteToCompteDtoMapper compteToCompteDtoMapper = Mappers.getMapper(CompteToCompteDtoMapper.class);
 
+  @Spy
+  private final PageTransactionDtoToPageTransactionMapper pageTransactionDtoToPageTransactionMapper = Mappers
+      .getMapper(PageTransactionDtoToPageTransactionMapper.class);
+
   private PersistanceAdapter persistanceAdapter;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
     persistanceAdapter = new PersistanceAdapter(compteRepository, transactionRepository, compteDtoToCompteMapper,
-        compteToCompteDtoMapper);
+        compteToCompteDtoMapper, pageTransactionDtoToPageTransactionMapper);
   }
 
   @Test
@@ -82,20 +87,22 @@ class PersistanceAdapterTest {
     List<TransactionDto> transactions = List.of(TransactionDto.builder()
             .description("test")
             .montant(500)
-            .status("valid")
+        .typeTransaction("DEPOSIT")
+            .status("VALID")
             .creationDate(LocalDateTime.now()).build(),
         TransactionDto.builder()
             .description("test")
+            .typeTransaction("DEPOSIT")
             .montant(200)
-            .status("valid")
+            .status("VALID")
             .creationDate(LocalDateTime.now()).build());
 
     when(transactionRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(transactions));
 
-    PageTransaction pageTransaction = persistanceAdapter.consultTransaction(0, 10);
+    PageTransaction pageTransaction = persistanceAdapter.consultTransaction(0, 2);
 
     assertThat(pageTransaction.getPage()).isEqualTo(0);
-    assertThat(pageTransaction.getPageSize()).isEqualTo(10);
+    assertThat(pageTransaction.getPageSize()).isEqualTo(2);
     assertThat(pageTransaction.getTransactions().size()).isEqualTo(2);
 
   }

@@ -5,6 +5,7 @@ import com.exalt.katas.domain.model.PageTransaction;
 import com.exalt.katas.domain.spi.PersistancePort;
 import com.exalt.katas.infrastructure.mapper.CompteDtoToCompteMapper;
 import com.exalt.katas.infrastructure.mapper.CompteToCompteDtoMapper;
+import com.exalt.katas.infrastructure.mapper.PageTransactionDtoToPageTransactionMapper;
 import com.exalt.katas.infrastructure.model.CompteDto;
 import com.exalt.katas.infrastructure.model.TransactionDto;
 import com.exalt.katas.infrastructure.repository.CompteRepository;
@@ -27,6 +28,8 @@ public class PersistanceAdapter implements PersistancePort {
 
   private final CompteToCompteDtoMapper compteToCompteDtoMapper;
 
+  private final PageTransactionDtoToPageTransactionMapper pageTransactionDtoToPageTransactionMapper;
+
   @Override
   public Compte findCompte() {
     return compteDtoToCompteMapper.toCompte(compteRepository.findAll().stream().findFirst().orElse(null));
@@ -44,6 +47,6 @@ public class PersistanceAdapter implements PersistancePort {
   public PageTransaction consultTransaction(int page, int pageSize) {
     Page<TransactionDto> pageCurrent = transactionRepository
         .findAll(PageRequest.of(page, pageSize, Direction.DESC, "creationDate"));
-    return null;
+    return pageTransactionDtoToPageTransactionMapper.toPageTransaction(pageCurrent);
   }
 }
