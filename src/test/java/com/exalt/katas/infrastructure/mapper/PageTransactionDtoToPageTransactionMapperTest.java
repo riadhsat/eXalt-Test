@@ -33,5 +33,11 @@ class PageTransactionDtoToPageTransactionMapperTest {
 
     PageTransaction pageTransaction = mapper.toPageTransaction(new PageImpl<>(transactions));
     assertThat(pageTransaction.getTransactions()).isNotEmpty();
+    assertThat(pageTransaction.getTransactions().size()).isEqualTo(2);
+    assertThat(pageTransaction.getPage()).isEqualTo(0);
+    assertThat(pageTransaction.getTotalTransactions()).isEqualTo(2);
+    assertThat(pageTransaction.getPageSize()).isEqualTo(2);
+    assertThat(pageTransaction.getTotalPage()).isEqualTo(1);
+
   }
 }
